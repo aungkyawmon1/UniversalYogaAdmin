@@ -1,4 +1,4 @@
-package com.example.universalyogaadmin;
+package com.example.universalyogaadmin.activity;
 
 import android.os.Bundle;
 import android.widget.Button;
@@ -13,22 +13,27 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.universalyogaadmin.R;
+import com.example.universalyogaadmin.database.DatabaseHelper;
+
 public class CreateCourse extends AppCompatActivity {
 
     private Spinner spinnerDayOfWeek, spinnerClassType, spinnerDifficultyLevel;
     private EditText editTextTime, editTextCapacity, editTextDuration, editTextPrice, editTextDescription;
     private Button buttonSubmit;
 
+    private DatabaseHelper databaseHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_create_course);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+//            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+//            return insets;
+//        });
 
         // Initialize UI components
         spinnerDayOfWeek = findViewById(R.id.spinnerDayOfWeek);
@@ -40,6 +45,7 @@ public class CreateCourse extends AppCompatActivity {
         editTextPrice = findViewById(R.id.editTextPrice);
         editTextDescription = findViewById(R.id.editTextDescription);
         buttonSubmit = findViewById(R.id.buttonSubmit);
+        databaseHelper = new DatabaseHelper(this);
 
         // Set click listener for the submit button
         buttonSubmit.setOnClickListener(view -> validateAndSubmit());
@@ -82,6 +88,13 @@ public class CreateCourse extends AppCompatActivity {
     private void saveToDatabase(String day, String time, int capacity, int duration, double price, String classType, String description) {
         // Save class details to the SQLite database
         // Implementation of database insertion goes here
-        Toast.makeText(this, "Class details saved successfully!", Toast.LENGTH_SHORT).show();
+        // Add the course to the database
+        boolean isInserted = databaseHelper.addClass(day, time, capacity, duration, price, classType, description);
+        if (isInserted) {
+            Toast.makeText(this, "Course added successfully!", Toast.LENGTH_SHORT).show();
+            finish();  // Close activity and go back to the list
+        } else {
+            Toast.makeText(this, "Failed to add course.", Toast.LENGTH_SHORT).show();
+        }
     }
 }
