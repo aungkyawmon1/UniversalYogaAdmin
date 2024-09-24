@@ -1,5 +1,6 @@
 package com.example.universalyogaadmin.activity;
 
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,12 +16,17 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.universalyogaadmin.R;
 import com.example.universalyogaadmin.database.DatabaseHelper;
+import com.google.android.material.textfield.TextInputEditText;
+
+import java.util.Calendar;
+import java.util.Locale;
 
 public class CreateCourse extends AppCompatActivity {
 
     private Spinner spinnerDayOfWeek, spinnerClassType, spinnerDifficultyLevel;
-    private EditText editTextTime, editTextCapacity, editTextDuration, editTextPrice, editTextDescription;
+    private EditText editTextDuration, editTextPrice, editTextDescription;
     private Button buttonSubmit;
+    private TextInputEditText editTextTime, editTextCapacity;
 
     private DatabaseHelper databaseHelper;
 
@@ -47,9 +53,45 @@ public class CreateCourse extends AppCompatActivity {
         buttonSubmit = findViewById(R.id.buttonSubmit);
         databaseHelper = new DatabaseHelper(this);
 
+        // Set up TimePicker when editTextTime is clicked or focused
+        setUpTimePicker();
+
+
         // Set click listener for the submit button
         buttonSubmit.setOnClickListener(view -> validateAndSubmit());
     }
+
+    private void setUpTimePicker() {
+        // Disable direct input for time EditText
+        editTextTime.setInputType(0);
+        editTextTime.setFocusable(false);
+
+        // Show TimePickerDialog when editTextTime is clicked
+        editTextTime.setOnClickListener(v -> showTimePickerDialog());
+    }
+
+    private void showTimePickerDialog() {
+        // Initialize TimePickerDialog with current time as default
+        Calendar calendar = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+
+        // Create and show TimePickerDialog
+        TimePickerDialog timePickerDialog = new TimePickerDialog(
+                this,
+                (view, selectedHour, selectedMinute) -> {
+                    // Format selected time and set to EditText
+                    String formattedTime = String.format(Locale.getDefault(), "%02d:%02d", selectedHour, selectedMinute);
+                    editTextTime.setText(formattedTime);
+                },
+                hour,
+                minute,
+                true // Use 24-hour format, set to false if 12-hour format is needed
+        );
+
+        timePickerDialog.show();
+    }
+
 
     private void validateAndSubmit() {
         // Validate required fields

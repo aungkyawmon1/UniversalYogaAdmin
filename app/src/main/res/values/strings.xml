@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Universal Yoga Admin</string>
+    <string name="cc_capacity">Capacity</string>
+    <string name="cc_time_of_course">Time Of Course</string>
+    <string name="cc_duration">Duration (minutes)</string>
+    <string name="cc_price_per_class">Price per Class (£)</string>
+
+    <!--    Class Activity-->
+    <string name="class_date_of_class">Date Of Class</string>
+    <string name="class_teacher">Teacher</string>
+    <string name="class_comment">Comment</string>
+    <string name="class_optional">Optional</string>
 </resources>

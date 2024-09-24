@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.universalyogaadmin.R;
@@ -15,11 +14,11 @@ import com.example.universalyogaadmin.model.YogaClass;
 
 import java.util.ArrayList;
 
-public class ClassesAdapter extends RecyclerView.Adapter<ClassesAdapter.ClassViewHolder> {
+public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ClassViewHolder> {
     private Context context;
     private ArrayList<YogaClass> yogaClasses;
 
-    public ClassesAdapter(Context context, ArrayList<YogaClass> yogaClasses) {
+    public CourseAdapter(Context context, ArrayList<YogaClass> yogaClasses) {
         this.context = context;
         this.yogaClasses = yogaClasses;
     }

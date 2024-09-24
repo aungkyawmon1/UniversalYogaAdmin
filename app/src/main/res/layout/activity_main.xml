@@ -21,7 +21,7 @@
         android:layout_margin="16dp"
         android:src="@drawable/ic_add"
         android:contentDescription="Add Course"
-        android:backgroundTint="@color/primaryColor"
+        android:backgroundTint="@color/primary"
         android:tint="@android:color/white" />
 
 

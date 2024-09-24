@@ -1,23 +1,16 @@
 package com.example.universalyogaadmin.activity;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.universalyogaadmin.*;
-import com.example.universalyogaadmin.adapter.ClassesAdapter;
+import com.example.universalyogaadmin.adapter.CourseAdapter;
 import com.example.universalyogaadmin.database.DatabaseHelper;
 import com.example.universalyogaadmin.model.YogaClass;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -27,7 +20,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView recyclerViewClasses;
-    private ClassesAdapter adapter;
+    private CourseAdapter adapter;
     private DatabaseHelper databaseHelper;
     private FloatingActionButton fabAddCourse;
 
@@ -61,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setUpRecyclerView() {
         yogaClasses = new ArrayList<>();
-        adapter = new ClassesAdapter(this, yogaClasses);
+        adapter = new CourseAdapter(this, yogaClasses);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager( this, 1);
         recyclerViewClasses.setLayoutManager(layoutManager);
         recyclerViewClasses.setItemAnimator(new DefaultItemAnimator());
