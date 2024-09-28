@@ -8,10 +8,11 @@ public class YogaClass {
     private int duration;
     private double price;
     private String type;
+    private String level;
     private String description;
 
     // Constructor
-    public YogaClass(int id, String day, String time, int capacity, int duration, double price, String type, String description) {
+    public YogaClass(int id, String day, String time, int capacity, int duration, double price, String type, String level, String description) {
         this.id = id;
         this.day = day;
         this.time = time;
@@ -19,6 +20,7 @@ public class YogaClass {
         this.duration = duration;
         this.price = price;
         this.type = type;
+        this.level = level;
         this.description = description;
     }
 
@@ -30,5 +32,6 @@ public class YogaClass {
     public int getDuration() { return duration; }
     public double getPrice() { return price; }
     public String getType() { return type; }
+    public String getLevel() { return  level; }
     public String getDescription() { return description; }
 }

@@ -1,6 +1,7 @@
 package com.example.universalyogaadmin.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.universalyogaadmin.R;
+import com.example.universalyogaadmin.activity.CourseDetailActivity;
 import com.example.universalyogaadmin.model.YogaClass;
 
 import java.util.ArrayList;
@@ -48,6 +50,13 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ClassViewH
         holder.textViewPrice.setText("Price: £" + yogaClass.getPrice());
         holder.textViewType.setText(yogaClass.getType());
         holder.textViewDescription.setText(yogaClass.getDescription() != null ? yogaClass.getDescription() : "No description");
+
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, CourseDetailActivity.class);
+            intent.putExtra("yoga_class_id", yogaClass.getId());
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        });
     }
 
     @Override

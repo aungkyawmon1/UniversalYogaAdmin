@@ -24,9 +24,8 @@ import java.util.Locale;
 public class CreateCourse extends AppCompatActivity {
 
     private Spinner spinnerDayOfWeek, spinnerClassType, spinnerDifficultyLevel;
-    private EditText editTextDuration, editTextPrice;
     private Button buttonSubmit;
-    private TextInputEditText editTextTime, editTextCapacity, editTextDescription;
+    private TextInputEditText editTextTime, editTextCapacity, editTextDescription, editTextPrice, editTextDuration;
 
     private DatabaseHelper databaseHelper;
 
@@ -101,6 +100,7 @@ public class CreateCourse extends AppCompatActivity {
         String duration = editTextDuration.getText().toString().trim();
         String price = editTextPrice.getText().toString().trim();
         String classType = spinnerClassType.getSelectedItem().toString();
+        String level = spinnerDifficultyLevel.getSelectedItem().toString();
 
         // Check for empty fields and show errors
         if (day.isEmpty() || time.isEmpty() || capacity.isEmpty() || duration.isEmpty() || price.isEmpty() || classType.isEmpty()) {
@@ -109,29 +109,29 @@ public class CreateCourse extends AppCompatActivity {
         }
 
         // Display entered details for confirmation
-        showConfirmationDialog(day, time, capacity, duration, price, classType, editTextDescription.getText().toString());
+        showConfirmationDialog(day, time, capacity, duration, price, classType,level, editTextDescription.getText().toString());
     }
 
-    private void showConfirmationDialog(String day, String time, String capacity, String duration, String price, String classType, String description) {
+    private void showConfirmationDialog(String day, String time, String capacity, String duration, String price, String classType,String level, String description) {
         // Show confirmation dialog or new activity
         new AlertDialog.Builder(this)
                 .setTitle("Confirm Details")
                 .setMessage("Day: " + day + "\nTime: " + time + "\nCapacity: " + capacity +
                         "\nDuration: " + duration + " minutes\nPrice: £" + price +
-                        "\nClass Type: " + classType + "\nDescription: " + description)
+                        "\nClass Type: " + classType + "\nLevel: " + level + "\nDescription: " + description)
                 .setPositiveButton("Confirm", (dialog, which) -> {
                     // Save data to database
-                    saveToDatabase(day, time, Integer.parseInt(capacity), Integer.parseInt(duration), Double.parseDouble(price), classType, description);
+                    saveToDatabase(day, time, Integer.parseInt(capacity), Integer.parseInt(duration), Double.parseDouble(price), classType, level, description);
                 })
                 .setNegativeButton("Edit", null)
                 .show();
     }
 
-    private void saveToDatabase(String day, String time, int capacity, int duration, double price, String classType, String description) {
+    private void saveToDatabase(String day, String time, int capacity, int duration, double price, String classType, String level, String description) {
         // Save class details to the SQLite database
         // Implementation of database insertion goes here
         // Add the course to the database
-        boolean isInserted = databaseHelper.addClass(day, time, capacity, duration, price, classType, description);
+        boolean isInserted = databaseHelper.addClass(day, time, capacity, duration, price, classType, level, description);
         if (isInserted) {
             Toast.makeText(this, "Course added successfully!", Toast.LENGTH_SHORT).show();
             finish();  // Close activity and go back to the list

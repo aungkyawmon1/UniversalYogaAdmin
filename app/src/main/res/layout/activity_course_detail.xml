@@ -36,7 +36,6 @@
                     <TextView
                         android:id="@+id/tvNameTime"
                         android:layout_width="0dp"
-                        android:text="Hello"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         style="@style/TextAppearance.MaterialComponents.Headline4" />
@@ -68,7 +67,7 @@
                             android:id="@+id/tvCapacity"
                             android:paddingStart="16dp"
                             android:paddingEnd="16dp"
-                            android:text="@string/class_date_of_class"
+                            android:text="Capacity"
                             style="@style/TextAppearance.MaterialComponents.Subtitle1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -183,7 +182,6 @@
                 <TextView
                     android:id="@+id/tvDescription"
                     android:layout_margin="16dp"
-                    android:text="@string/class_date_of_class"
                     style="@style/TextAppearance.MaterialComponents.Subtitle1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
