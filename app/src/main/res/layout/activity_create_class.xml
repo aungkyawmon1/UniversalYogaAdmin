@@ -34,7 +34,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/filledTextFieldName"
+            android:id="@+id/filledTextFieldTeacher"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
 
             <!--this is the actual edit text which takes the input-->
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etNameOfObservation"
+                android:id="@+id/etTeacher"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -54,7 +54,7 @@
 
         <!-- Comment -->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/filledTextFieldPhoneDescription"
+            android:id="@+id/filledTextFieldComment"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

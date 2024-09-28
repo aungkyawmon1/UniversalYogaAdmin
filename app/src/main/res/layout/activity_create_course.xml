@@ -11,10 +11,10 @@
     <ScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="16dp">
+        android:layout_height="match_parent">
 
         <LinearLayout
+            android:layout_margin="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -62,6 +62,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
                 android:hint="@string/cc_capacity">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -74,32 +75,46 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Duration -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Duration (minutes)"
-                android:textSize="16sp" />
 
-            <EditText
-                android:id="@+id/editTextDuration"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textFieldDuration"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Enter duration"
-                android:inputType="number" />
+                android:layout_marginBottom="16dp"
+                android:hint="@string/cc_duration">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextDuration"
+                    android:layout_width="match_parent"
+                    android:inputType="number"
+                    android:layout_height="wrap_content"
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
 
             <!-- Price -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Price per Class (£)"
-                android:textSize="16sp" />
 
-            <EditText
-                android:id="@+id/editTextPrice"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textFieldPrice"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Enter price"
-                android:inputType="numberDecimal" />
+                android:layout_marginBottom="16dp"
+                app:endIconMode="custom"
+                app:endIconContentDescription="£"
+                app:endIconDrawable="@drawable/euro"
+                android:hint="@string/cc_price_per_class">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextPrice"
+                    android:layout_width="match_parent"
+                    android:inputType="numberDecimal"
+                    android:layout_height="wrap_content"
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Type of Class -->
             <TextView
@@ -110,38 +125,46 @@
 
             <Spinner
                 android:id="@+id/spinnerClassType"
+                android:layout_marginTop="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:entries="@array/class_types"
                 android:spinnerMode="dropdown"/>
 
-            <!-- Description -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Description"
-                android:textSize="16sp" />
-
-            <EditText
-                android:id="@+id/editTextDescription"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Enter description (optional)"
-                android:inputType="textMultiLine" />
-
             <!-- Additional Field Example: Difficulty Level -->
             <TextView
                 android:layout_width="wrap_content"
+                android:layout_marginTop="16dp"
                 android:layout_height="wrap_content"
                 android:text="Difficulty Level"
                 android:textSize="16sp" />
 
             <Spinner
                 android:id="@+id/spinnerDifficultyLevel"
+                android:layout_marginTop="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:entries="@array/difficulty_levels"
                 android:spinnerMode="dropdown"/>
+
+            <!-- Description -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/filledTextFieldComment"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:helperText="@string/class_optional"
+                android:hint="Description">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:inputType="text|textMultiLine"
+                    android:gravity="top" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Submit Button -->
             <Button

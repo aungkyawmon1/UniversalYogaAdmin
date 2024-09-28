@@ -24,9 +24,9 @@ import java.util.Locale;
 public class CreateCourse extends AppCompatActivity {
 
     private Spinner spinnerDayOfWeek, spinnerClassType, spinnerDifficultyLevel;
-    private EditText editTextDuration, editTextPrice, editTextDescription;
+    private EditText editTextDuration, editTextPrice;
     private Button buttonSubmit;
-    private TextInputEditText editTextTime, editTextCapacity;
+    private TextInputEditText editTextTime, editTextCapacity, editTextDescription;
 
     private DatabaseHelper databaseHelper;
 

@@ -16,11 +16,14 @@
         android:theme="@style/Base.Theme.UniversalYogaAdmin"
         tools:targetApi="31">
         <activity
+            android:name=".activity.CourseDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.CreateClass"
             android:exported="false" />
         <activity
             android:name=".activity.CreateCourse"
-            android:exported="false"></activity>
+            android:exported="false" />
         <activity
             android:name=".activity.MainActivity"
             android:exported="true">
