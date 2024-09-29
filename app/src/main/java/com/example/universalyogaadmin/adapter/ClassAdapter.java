@@ -6,11 +6,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.universalyogaadmin.ClassUpdateListener;
 import com.example.universalyogaadmin.R;
+import com.example.universalyogaadmin.activity.CourseDetailActivity;
 import com.example.universalyogaadmin.model.YogaClass;
 
 import java.util.ArrayList;
@@ -18,9 +21,11 @@ import java.util.ArrayList;
 public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ClassViewHolder> {
     private Context context;
     private ArrayList<YogaClass> yogaClasses;
+    private ClassUpdateListener listener;
 
-    public ClassAdapter(Context context, ArrayList<YogaClass> yogaClasses) {
+    public ClassAdapter(Context context,ClassUpdateListener listener, ArrayList<YogaClass> yogaClasses) {
         this.context = context;
+        this.listener = listener;
         this.yogaClasses = yogaClasses;
     }
 
@@ -42,8 +47,16 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ClassViewHol
 
         // Bind data to the view holder
         holder.tvDate.setText(yogaClass.getDate());
-        holder.tvTeacher.setText(yogaClass.getTeacher());
+        holder.tvTeacher.setText("Teacher: " + yogaClass.getTeacher());
         holder.tvComment.setText(yogaClass.getComment());
+
+        holder.ivEdit.setOnClickListener(v -> {
+            listener.updateClass(yogaClass.getId());
+        });
+
+        holder.ivDelete.setOnClickListener(v -> {
+           listener.deleteClass(yogaClass.getId());
+        });
     }
 
     @Override
@@ -54,12 +67,15 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ClassViewHol
     // ViewHolder class to hold the view for each item
     static class ClassViewHolder extends RecyclerView.ViewHolder {
         TextView tvDate, tvTeacher, tvComment;
+        ImageView ivEdit, ivDelete;
 
         public ClassViewHolder(View itemView) {
             super(itemView);
             tvDate = itemView.findViewById(R.id.tvDate);
             tvTeacher = itemView.findViewById(R.id.tvTeacher);
             tvComment = itemView.findViewById(R.id.tvComment);
+            ivEdit = itemView.findViewById(R.id.ivEdit);
+            ivDelete = itemView.findViewById(R.id.ivDelete);
         }
     }
 

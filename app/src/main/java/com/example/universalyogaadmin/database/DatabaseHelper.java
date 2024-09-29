@@ -222,6 +222,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return yogaCourse;
     }
 
+    public YogaClass getYogaClasses(int classID) {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + TABLE_CLASS + " WHERE " + CLASS_COLUMN_ID + " = ? ";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(classID)});
+
+        YogaClass yogaClass = new YogaClass(-1, -1, "", "", "");
+        if (cursor != null) {
+            while (cursor.moveToFirst()) {
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow(CLASS_COLUMN_ID));
+                int courseID = cursor.getInt(cursor.getColumnIndexOrThrow(CLASS_COLUMN_COURSE_ID));
+                String date = cursor.getString(cursor.getColumnIndexOrThrow(CLASS_COLUMN_DATE));
+                String teacher = cursor.getString(cursor.getColumnIndexOrThrow(CLASS_COLUMN_TEACHER));
+                String comment = cursor.getString(cursor.getColumnIndexOrThrow(CLASS_COLUMN_COMMENT));
+
+                yogaClass = new YogaClass(id, courseID, date, teacher, comment);
+                break;
+
+            }
+            cursor.close();
+        }
+        db.close();
+        return yogaClass;
+    }
+
     // Method to delete a class by ID
     public boolean deleteCourse(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -241,6 +266,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void resetDatabase() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_COURSE, null, null);
+        db.delete(TABLE_CLASS, null, null);
         db.close();
     }
+
 }

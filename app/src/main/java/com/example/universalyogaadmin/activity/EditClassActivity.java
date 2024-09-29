@@ -17,24 +17,28 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.universalyogaadmin.R;
 import com.example.universalyogaadmin.database.DatabaseHelper;
+import com.example.universalyogaadmin.model.YogaClass;
+import com.example.universalyogaadmin.model.YogaCourse;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Calendar;
 
-public class CreateClass extends AppCompatActivity {
+public class EditClassActivity extends AppCompatActivity {
 
     private TextInputEditText editTextDate, editTextTeacher, editTextComment;
 
+    private int classID = -1;
     private int courseID = -1;
 
     private DatabaseHelper databaseHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_create_class);
+        setContentView(R.layout.activity_edit_class);
 
-        getSupportActionBar().setTitle("Add Class");
+        getSupportActionBar().setTitle("Edit Class");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         editTextDate = findViewById(R.id.etDateOfClass);
@@ -42,9 +46,18 @@ public class CreateClass extends AppCompatActivity {
         editTextComment = findViewById(R.id.etComment);
         databaseHelper = new DatabaseHelper(this);
 
+        classID = getIntent().getIntExtra("yoga_class_id", -1);
         courseID = getIntent().getIntExtra("yoga_course_id", -1);
-
+        loadClassDetails(classID);
         setUpDatePicker();
+    }
+
+    private void loadClassDetails(int id) {
+        YogaClass yogaClass = databaseHelper.getYogaClasses(id);
+
+        editTextDate.setText(yogaClass.getDate());
+        editTextTeacher.setText(yogaClass.getTeacher());
+        editTextComment.setText(yogaClass.getComment());
     }
 
     private void setUpDatePicker() {
@@ -97,19 +110,21 @@ public class CreateClass extends AppCompatActivity {
         // Save class details to the SQLite database
         // Implementation of database insertion goes here
         // Add the course to the database
-        boolean isInserted = databaseHelper.addClass(courseID, date, teacher, comment);
+        YogaClass yogaClass = new YogaClass(classID, courseID, date, teacher, comment);
+        boolean isInserted = databaseHelper.updateClass(classID, yogaClass);
         if (isInserted) {
-            Toast.makeText(this, "Class added successfully!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Class updated successfully!", Toast.LENGTH_SHORT).show();
             finish();  // Close activity and go back to the list
         } else {
-            Toast.makeText(this, "Failed to add course.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Failed to update course.", Toast.LENGTH_SHORT).show();
         }
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.save_menu, menu);
+        inflater.inflate(R.menu.update_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -129,4 +144,5 @@ public class CreateClass extends AppCompatActivity {
         }
 
     }
+
 }
