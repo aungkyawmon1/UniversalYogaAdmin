@@ -6,8 +6,19 @@
     <string name="cc_price_per_class">Price per Class (£)</string>
 
     <!--    Class Activity-->
+    <string name="class_name">Class</string>
     <string name="class_date_of_class">Date Of Class</string>
     <string name="class_teacher">Teacher</string>
     <string name="class_comment">Comment</string>
     <string name="class_optional">Optional</string>
+
+    <!--Menu-->
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="reset">Reset</string>
+    <string name="save">Save</string>
+
+    <!-- Dialog -->
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 </resources>

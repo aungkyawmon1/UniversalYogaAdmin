@@ -12,48 +12,48 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.universalyogaadmin.R;
 import com.example.universalyogaadmin.activity.CourseDetailActivity;
-import com.example.universalyogaadmin.model.YogaClass;
+import com.example.universalyogaadmin.model.YogaCourse;
 
 import java.util.ArrayList;
 
 public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ClassViewHolder> {
     private Context context;
-    private ArrayList<YogaClass> yogaClasses;
+    private ArrayList<YogaCourse> yogaCourses;
 
-    public CourseAdapter(Context context, ArrayList<YogaClass> yogaClasses) {
+    public CourseAdapter(Context context, ArrayList<YogaCourse> yogaCourses) {
         this.context = context;
-        this.yogaClasses = yogaClasses;
+        this.yogaCourses = yogaCourses;
     }
 
-    public void updateView( ArrayList<YogaClass> yogaClasses) {
-        Log.i("DATA", yogaClasses.size() + "size");
-        this.yogaClasses = yogaClasses;
+    public void updateView( ArrayList<YogaCourse> yogaCourses) {
+        Log.i("DATA", yogaCourses.size() + "size");
+        this.yogaCourses = yogaCourses;
         notifyDataSetChanged();
     }
 
     @Override
     public ClassViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // Inflate the layout for each row
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_class, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_course, parent, false);
         return new ClassViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ClassViewHolder holder, int position) {
-        YogaClass yogaClass = yogaClasses.get(position);
+        YogaCourse yogaCourse = yogaCourses.get(position);
 
         // Bind data to the view holder
-        holder.textViewDay.setText(yogaClass.getDay());
-        holder.textViewTime.setText(yogaClass.getTime());
-        holder.textViewCapacity.setText("Capacity: " + yogaClass.getCapacity());
-        holder.textViewDuration.setText("Duration: " + yogaClass.getDuration() + " mins");
-        holder.textViewPrice.setText("Price: £" + yogaClass.getPrice());
-        holder.textViewType.setText(yogaClass.getType());
-        holder.textViewDescription.setText(yogaClass.getDescription() != null ? yogaClass.getDescription() : "No description");
+        holder.textViewDay.setText(yogaCourse.getDay());
+        holder.textViewTime.setText(yogaCourse.getTime());
+        holder.textViewCapacity.setText("Capacity: " + yogaCourse.getCapacity());
+        holder.textViewDuration.setText("Duration: " + yogaCourse.getDuration() + " mins");
+        holder.textViewPrice.setText("Price: £" + yogaCourse.getPrice());
+        holder.textViewType.setText(yogaCourse.getType());
+        holder.textViewDescription.setText(yogaCourse.getDescription() != null ? yogaCourse.getDescription() : "No description");
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, CourseDetailActivity.class);
-            intent.putExtra("yoga_class_id", yogaClass.getId());
+            intent.putExtra("yoga_course_id", yogaCourse.getId());
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         });
@@ -61,7 +61,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ClassViewH
 
     @Override
     public int getItemCount() {
-        return yogaClasses.size();
+        return yogaCourses.size();
     }
 
     // ViewHolder class to hold the view for each item
@@ -81,9 +81,9 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ClassViewH
     }
 
     // Optional: Method to update the list if the data changes
-    public void updateData(ArrayList<YogaClass> newYogaClasses) {
-        yogaClasses.clear();
-        yogaClasses.addAll(newYogaClasses);
+    public void updateData(ArrayList<YogaCourse> newYogaCourses) {
+        yogaCourses.clear();
+        yogaCourses.addAll(newYogaCourses);
         notifyDataSetChanged();
     }
 }

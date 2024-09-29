@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.universalyogaadmin.*;
 import com.example.universalyogaadmin.adapter.CourseAdapter;
 import com.example.universalyogaadmin.database.DatabaseHelper;
-import com.example.universalyogaadmin.model.YogaClass;
+import com.example.universalyogaadmin.model.YogaCourse;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     // Retrieve the data as an ArrayList
-    ArrayList<YogaClass> yogaClasses;
+    ArrayList<YogaCourse> yogaCourses;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,8 +53,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void setUpRecyclerView() {
-        yogaClasses = new ArrayList<>();
-        adapter = new CourseAdapter(this, yogaClasses);
+        yogaCourses = new ArrayList<>();
+        adapter = new CourseAdapter(this, yogaCourses);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager( this, 1);
         recyclerViewClasses.setLayoutManager(layoutManager);
         recyclerViewClasses.setItemAnimator(new DefaultItemAnimator());
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         // Refresh data when coming back from AddCourseActivity
-        yogaClasses = databaseHelper.getAllYogaClasses();
-        adapter.updateView(yogaClasses);
+        yogaCourses = databaseHelper.getAllYogaClasses();
+        adapter.updateView(yogaCourses);
     }
 }

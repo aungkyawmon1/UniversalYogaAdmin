@@ -2,36 +2,24 @@ package com.example.universalyogaadmin.model;
 
 public class YogaClass {
     private int id; // Add ID if needed for database operations
-    private String day;
-    private String time;
-    private int capacity;
-    private int duration;
-    private double price;
-    private String type;
-    private String level;
-    private String description;
+    private int courseID;
+    private String date;
+    private String teacher;
+    private String comment;
 
-    // Constructor
-    public YogaClass(int id, String day, String time, int capacity, int duration, double price, String type, String level, String description) {
+    public YogaClass(int id, int courseID, String date, String teacher, String comment) {
         this.id = id;
-        this.day = day;
-        this.time = time;
-        this.capacity = capacity;
-        this.duration = duration;
-        this.price = price;
-        this.type = type;
-        this.level = level;
-        this.description = description;
+        this.courseID = courseID;
+        this.date = date;
+        this.teacher = teacher;
+        this.comment = comment;
     }
 
     // Getters and Setters
     public int getId() { return id; }
-    public String getDay() { return day; }
-    public String getTime() { return time; }
-    public int getCapacity() { return capacity; }
-    public int getDuration() { return duration; }
-    public double getPrice() { return price; }
-    public String getType() { return type; }
-    public String getLevel() { return  level; }
-    public String getDescription() { return description; }
+    public int getCourseID() { return courseID; }
+    public String getDate() { return date; }
+    public String getTeacher() { return teacher; }
+    public String getComment() { return comment; }
+
 }

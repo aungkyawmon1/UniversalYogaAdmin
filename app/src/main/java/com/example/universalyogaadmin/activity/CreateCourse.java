@@ -131,7 +131,7 @@ public class CreateCourse extends AppCompatActivity {
         // Save class details to the SQLite database
         // Implementation of database insertion goes here
         // Add the course to the database
-        boolean isInserted = databaseHelper.addClass(day, time, capacity, duration, price, classType, level, description);
+        boolean isInserted = databaseHelper.addCourse(day, time, capacity, duration, price, classType, level, description);
         if (isInserted) {
             Toast.makeText(this, "Course added successfully!", Toast.LENGTH_SHORT).show();
             finish();  // Close activity and go back to the list
