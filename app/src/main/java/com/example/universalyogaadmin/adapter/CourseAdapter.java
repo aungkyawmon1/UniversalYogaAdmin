@@ -16,7 +16,7 @@ import com.example.universalyogaadmin.model.YogaCourse;
 
 import java.util.ArrayList;
 
-public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ClassViewHolder> {
+public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseViewHolder> {
     private Context context;
     private ArrayList<YogaCourse> yogaCourses;
 
@@ -32,14 +32,14 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ClassViewH
     }
 
     @Override
-    public ClassViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public CourseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // Inflate the layout for each row
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_course, parent, false);
-        return new ClassViewHolder(view);
+        return new CourseViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ClassViewHolder holder, int position) {
+    public void onBindViewHolder(CourseViewHolder holder, int position) {
         YogaCourse yogaCourse = yogaCourses.get(position);
 
         // Bind data to the view holder
@@ -65,10 +65,10 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ClassViewH
     }
 
     // ViewHolder class to hold the view for each item
-    public static class ClassViewHolder extends RecyclerView.ViewHolder {
+    static class CourseViewHolder extends RecyclerView.ViewHolder {
         TextView textViewDay, textViewTime, textViewCapacity, textViewDuration, textViewPrice, textViewType, textViewDescription;
 
-        public ClassViewHolder(View itemView) {
+        public CourseViewHolder(View itemView) {
             super(itemView);
             textViewDay = itemView.findViewById(R.id.textViewDay);
             textViewTime = itemView.findViewById(R.id.textViewTime);

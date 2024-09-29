@@ -45,6 +45,8 @@ public class CourseDetailActivity extends AppCompatActivity {
         ivAddClass = findViewById(R.id.ivAddClass);
         databaseHelper = new DatabaseHelper(this);
 
+        setOnClickListener();
+
         courseID = getIntent().getIntExtra("yoga_course_id", -1);
         loadClassDetails(courseID);
 

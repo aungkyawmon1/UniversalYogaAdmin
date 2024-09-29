@@ -33,6 +33,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COURSE_COLUMN_LEVEL = "level";
     private static final String COURSE_COLUMN_DESCRIPTION = "description";
     private static final String CLASS_COLUMN_ID = "id";
+    private static final String CLASS_COLUMN_COURSE_ID = "course_id";
     private static final String CLASS_COLUMN_DATE = "date_class";
     private static final String CLASS_COLUMN_TEACHER = "teacher";
     private static final String CLASS_COLUMN_COMMENT = "comment";
@@ -53,7 +54,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String CREATE_TABLE_CLASS =
             "CREATE TABLE " + TABLE_CLASS + "("
                     + CLASS_COLUMN_ID  + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                    + COURSE_COLUMN_ID + " INTEGER NOT NULL,"
+                    + CLASS_COLUMN_COURSE_ID + " INTEGER NOT NULL,"
                     + CLASS_COLUMN_DATE + " TEXT NOT NULL,"
                     + CLASS_COLUMN_TEACHER + " TEXT NOT NULL,"
                     + CLASS_COLUMN_COMMENT + " TEXT"
@@ -99,7 +100,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public boolean addClass(int courseID, String date, String teacher, String comment) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(COURSE_COLUMN_ID, courseID);
+        values.put(CLASS_COLUMN_COURSE_ID, courseID);
         values.put(CLASS_COLUMN_DATE, date);
         values.put(CLASS_COLUMN_TEACHER, teacher);
         values.put(CLASS_COLUMN_COMMENT, comment);
@@ -144,7 +145,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 int id = cursor.getInt(cursor.getColumnIndexOrThrow(CLASS_COLUMN_ID));
-                int courseID = cursor.getInt(cursor.getColumnIndexOrThrow(COURSE_COLUMN_ID));
+                int courseID = cursor.getInt(cursor.getColumnIndexOrThrow(CLASS_COLUMN_COURSE_ID));
                 String date = cursor.getString(cursor.getColumnIndexOrThrow(CLASS_COLUMN_DATE));
                 String teacher = cursor.getString(cursor.getColumnIndexOrThrow(CLASS_COLUMN_TEACHER));
                 String comment = cursor.getString(cursor.getColumnIndexOrThrow(CLASS_COLUMN_COMMENT));
