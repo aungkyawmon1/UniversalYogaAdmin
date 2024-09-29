@@ -13,17 +13,27 @@ import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.universalyogaadmin.R;
+import com.example.universalyogaadmin.adapter.ClassAdapter;
 import com.example.universalyogaadmin.database.DatabaseHelper;
+import com.example.universalyogaadmin.model.YogaClass;
 import com.example.universalyogaadmin.model.YogaCourse;
+
+import java.util.ArrayList;
 
 public class CourseDetailActivity extends AppCompatActivity {
 
     private TextView tvName, tvCapacity, tvPrice, tvDuration, tvDescription, tvYogaType, tvYogaLevel;
     ImageView ivAddClass;
-
+    RecyclerView rvClass;
     private DatabaseHelper databaseHelper;
+    ClassAdapter classAdapter;
+
+    ArrayList<YogaClass> yogaClasses;
 
     private  int courseID = -1;
     @Override
@@ -43,13 +53,21 @@ public class CourseDetailActivity extends AppCompatActivity {
         tvYogaLevel = findViewById(R.id.tvYogaLevel);
         tvDescription = findViewById(R.id.tvDescription);
         ivAddClass = findViewById(R.id.ivAddClass);
+        rvClass = findViewById(R.id.rvClass);
         databaseHelper = new DatabaseHelper(this);
 
+        setUpRecyclerView();
         setOnClickListener();
 
         courseID = getIntent().getIntExtra("yoga_course_id", -1);
         loadClassDetails(courseID);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateObservation();
     }
 
     private void loadClassDetails(int id) {
@@ -62,6 +80,20 @@ public class CourseDetailActivity extends AppCompatActivity {
         tvYogaType.setText(yogaCourse.getType());
         tvYogaLevel.setText(yogaCourse.getLevel());
         tvDescription.setText(yogaCourse.getDescription());
+    }
+
+    private void setUpRecyclerView() {
+        yogaClasses = new ArrayList<>();
+        classAdapter = new ClassAdapter(this, yogaClasses);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager( this, 1);
+        rvClass.setLayoutManager(layoutManager);
+        rvClass.setItemAnimator(new DefaultItemAnimator());
+        rvClass.setAdapter(classAdapter);
+    }
+
+    private void updateObservation() {
+        yogaClasses = databaseHelper.getAllYogaClasses(courseID);
+        classAdapter.updateView(yogaClasses);
     }
 
     private void setOnClickListener() {

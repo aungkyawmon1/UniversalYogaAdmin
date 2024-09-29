@@ -137,15 +137,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return yogaCourses;
     }
 
-    public ArrayList<YogaClass> getAllYogaClasses() {
+    public ArrayList<YogaClass> getAllYogaClasses(int courseID) {
         ArrayList<YogaClass> yogaClasses = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_CLASS , null);
+        String query = "SELECT * FROM " + TABLE_CLASS + " WHERE " + CLASS_COLUMN_COURSE_ID + " = ? ORDER BY " + CLASS_COLUMN_ID + " DESC";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(courseID)});
 
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 int id = cursor.getInt(cursor.getColumnIndexOrThrow(CLASS_COLUMN_ID));
-                int courseID = cursor.getInt(cursor.getColumnIndexOrThrow(CLASS_COLUMN_COURSE_ID));
                 String date = cursor.getString(cursor.getColumnIndexOrThrow(CLASS_COLUMN_DATE));
                 String teacher = cursor.getString(cursor.getColumnIndexOrThrow(CLASS_COLUMN_TEACHER));
                 String comment = cursor.getString(cursor.getColumnIndexOrThrow(CLASS_COLUMN_COMMENT));
