@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.example.universalyogaadmin.model.YogaClass;
 import com.example.universalyogaadmin.model.YogaCourse;
 
 import java.util.ArrayList;
@@ -109,7 +110,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // Method to get all classes
-    public ArrayList<YogaCourse> getAllYogaClasses() {
+    public ArrayList<YogaCourse> getAllYogaCourses() {
         ArrayList<YogaCourse> yogaCourses = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_COURSE , null);
@@ -135,6 +136,60 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return yogaCourses;
     }
 
+    public ArrayList<YogaClass> getAllYogaClasses() {
+        ArrayList<YogaClass> yogaClasses = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_CLASS , null);
+
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow(CLASS_COLUMN_ID));
+                int courseID = cursor.getInt(cursor.getColumnIndexOrThrow(COURSE_COLUMN_ID));
+                String date = cursor.getString(cursor.getColumnIndexOrThrow(CLASS_COLUMN_DATE));
+                String teacher = cursor.getString(cursor.getColumnIndexOrThrow(CLASS_COLUMN_TEACHER));
+                String comment = cursor.getString(cursor.getColumnIndexOrThrow(CLASS_COLUMN_COMMENT));
+
+                YogaClass yogaClass = new YogaClass(id, courseID, date, teacher, comment);
+                yogaClasses.add(yogaClass);
+            }
+            cursor.close();
+        }
+        db.close();
+        return yogaClasses;
+    }
+
+    public boolean updateCourse(int id, YogaCourse yogaCourse) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put( COURSE_COLUMN_DAY, yogaCourse.getDay());
+        contentValues.put( COURSE_COLUMN_TIME, yogaCourse.getTime() );
+        contentValues.put( COURSE_COLUMN_CAPACITY, yogaCourse.getCapacity());
+        contentValues.put(COURSE_COLUMN_DURATION, yogaCourse.getDuration());
+        contentValues.put(COURSE_COLUMN_PRICE, yogaCourse.getPrice());
+        contentValues.put(COURSE_COLUMN_TYPE, yogaCourse.getType());
+        contentValues.put(COURSE_COLUMN_LEVEL, yogaCourse.getLevel());
+        contentValues.put(COURSE_COLUMN_DESCRIPTION, yogaCourse.getDescription());
+
+        int rowsAffected = db.update( TABLE_COURSE , contentValues, COURSE_COLUMN_ID + " = ?", new String[]{String.valueOf(id)});
+
+        // Update was successful if rowsAffected is greater than 0
+        db.close();
+        return rowsAffected > 0;
+    }
+
+    public boolean updateClass(int id, YogaClass yogaClass) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put( CLASS_COLUMN_DATE, yogaClass.getDate());
+        contentValues.put( CLASS_COLUMN_TEACHER, yogaClass.getTeacher() );
+        contentValues.put( CLASS_COLUMN_COMMENT, yogaClass.getComment());
+
+        int rowsAffected = db.update( TABLE_CLASS , contentValues, CLASS_COLUMN_ID + " = ?", new String[]{String.valueOf(id)});
+        // Update was successful if rowsAffected is greater than 0
+        db.close();
+        return rowsAffected > 0;
+    }
+
     public YogaCourse getYogaCourse(int courseID) {
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -143,8 +198,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         YogaCourse yogaCourse = new YogaCourse(0, "", "",0,0,0, "", "", "");
 
-
-        Log.i("TAG", "outside");
         if (cursor != null) {
             while (cursor.moveToFirst()) {
                 Log.i("TAG", "inside");
@@ -172,6 +225,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public boolean deleteCourse(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
         int result = db.delete(TABLE_COURSE, COURSE_COLUMN_ID + "=?", new String[]{String.valueOf(id)});
+        db.close();
+        return result > 0;
+    }
+
+    public boolean deleteClass(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int result = db.delete(TABLE_CLASS, CLASS_COLUMN_ID + "=?", new String[]{String.valueOf(id)});
         db.close();
         return result > 0;
     }

@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         // Refresh data when coming back from AddCourseActivity
-        yogaCourses = databaseHelper.getAllYogaClasses();
+        yogaCourses = databaseHelper.getAllYogaCourses();
         adapter.updateView(yogaCourses);
     }
 }
