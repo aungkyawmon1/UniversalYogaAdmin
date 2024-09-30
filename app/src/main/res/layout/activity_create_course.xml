@@ -166,15 +166,6 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Submit Button -->
-            <Button
-                android:id="@+id/buttonSubmit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Submit"
-                android:backgroundTint="@color/primary"
-                android:textColor="@android:color/white"
-                android:layout_marginTop="16dp"/>
         </LinearLayout>
     </ScrollView>
 

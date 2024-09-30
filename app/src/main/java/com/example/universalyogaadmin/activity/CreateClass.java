@@ -17,6 +17,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.universalyogaadmin.R;
 import com.example.universalyogaadmin.database.DatabaseHelper;
+import com.example.universalyogaadmin.model.YogaCourse;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Calendar;
@@ -26,6 +27,7 @@ public class CreateClass extends AppCompatActivity {
     private TextInputEditText editTextDate, editTextTeacher, editTextComment;
 
     private int courseID = -1;
+    private String day = "";
 
     private DatabaseHelper databaseHelper;
     @Override
@@ -43,8 +45,14 @@ public class CreateClass extends AppCompatActivity {
         databaseHelper = new DatabaseHelper(this);
 
         courseID = getIntent().getIntExtra("yoga_course_id", -1);
+        loadClassDetails(courseID);
 
         setUpDatePicker();
+    }
+
+    private void loadClassDetails(int id) {
+        YogaCourse yogaCourse = databaseHelper.getYogaCourse(id);
+        day = yogaCourse.getDay();
     }
 
     private void setUpDatePicker() {
@@ -56,7 +64,9 @@ public class CreateClass extends AppCompatActivity {
         editTextDate.setOnClickListener(v -> showDatePickerDialog() );
     }
 
-    private void showDatePickerDialog() {
+
+
+        private void showDatePickerDialog() {
         // Get the current date to display in the picker as default
         final Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
@@ -97,7 +107,7 @@ public class CreateClass extends AppCompatActivity {
         // Save class details to the SQLite database
         // Implementation of database insertion goes here
         // Add the course to the database
-        boolean isInserted = databaseHelper.addClass(courseID, date, teacher, comment);
+        boolean isInserted = databaseHelper.addClass(courseID, date, teacher, comment, day);
         if (isInserted) {
             Toast.makeText(this, "Class added successfully!", Toast.LENGTH_SHORT).show();
             finish();  // Close activity and go back to the list

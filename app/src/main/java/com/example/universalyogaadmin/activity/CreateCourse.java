@@ -2,6 +2,10 @@ package com.example.universalyogaadmin.activity;
 
 import android.app.TimePickerDialog;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -24,7 +28,7 @@ import java.util.Locale;
 public class CreateCourse extends AppCompatActivity {
 
     private Spinner spinnerDayOfWeek, spinnerClassType, spinnerDifficultyLevel;
-    private Button buttonSubmit;
+
     private TextInputEditText editTextTime, editTextCapacity, editTextDescription, editTextPrice, editTextDuration;
 
     private DatabaseHelper databaseHelper;
@@ -47,15 +51,13 @@ public class CreateCourse extends AppCompatActivity {
         editTextDuration = findViewById(R.id.editTextDuration);
         editTextPrice = findViewById(R.id.editTextPrice);
         editTextDescription = findViewById(R.id.editTextDescription);
-        buttonSubmit = findViewById(R.id.buttonSubmit);
         databaseHelper = new DatabaseHelper(this);
 
         // Set up TimePicker when editTextTime is clicked or focused
         setUpTimePicker();
 
 
-        // Set click listener for the submit button
-        buttonSubmit.setOnClickListener(view -> validateAndSubmit());
+
     }
 
     private void setUpTimePicker() {
@@ -129,12 +131,35 @@ public class CreateCourse extends AppCompatActivity {
         // Save class details to the SQLite database
         // Implementation of database insertion goes here
         // Add the course to the database
-        boolean isInserted = databaseHelper.addCourse(day, time, capacity, duration, price, classType, level, description);
+        boolean isInserted = databaseHelper.addCourse(day, time, capacity, duration, price, classType, level, description, false);
         if (isInserted) {
             Toast.makeText(this, "Course added successfully!", Toast.LENGTH_SHORT).show();
             finish();  // Close activity and go back to the list
         } else {
             Toast.makeText(this, "Failed to add course.", Toast.LENGTH_SHORT).show();
         }
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.save_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection.
+        Log.i("LOG", "search" + item.getItemId());
+
+        if(item.getItemId() == R.id.save) {
+            validateAndSubmit();
+            return true;
+        } else if (item.getItemId() == android.R.id.home) {
+            finish(); // or perform any custom action
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+
     }
 }

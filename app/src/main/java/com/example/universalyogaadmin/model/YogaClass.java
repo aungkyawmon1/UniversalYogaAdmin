@@ -6,13 +6,15 @@ public class YogaClass {
     private String date;
     private String teacher;
     private String comment;
+    private String day;
 
-    public YogaClass(int id, int courseID, String date, String teacher, String comment) {
+    public YogaClass(int id, int courseID, String date, String teacher, String comment, String day) {
         this.id = id;
         this.courseID = courseID;
         this.date = date;
         this.teacher = teacher;
         this.comment = comment;
+        this.day = day;
     }
 
     // Getters and Setters
@@ -21,5 +23,5 @@ public class YogaClass {
     public String getDate() { return date; }
     public String getTeacher() { return teacher; }
     public String getComment() { return comment; }
-
+    public String getDay() { return  day; }
 }

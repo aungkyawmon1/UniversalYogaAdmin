@@ -22,4 +22,7 @@
     <!-- Dialog -->
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+
+    <!-- Search -->
+    <string name="filtered_by">Filtered_by</string>
 </resources>

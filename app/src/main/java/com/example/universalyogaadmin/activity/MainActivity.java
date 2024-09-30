@@ -113,11 +113,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection.
-        if(item.getItemId() == R.id.search) {
-            Intent myIntent = new Intent(MainActivity.this, SearchActivity.class);
-            MainActivity.this.startActivity(myIntent);
-            return true;
-        } else if(item.getItemId() == R.id.reset) {
+       if(item.getItemId() == R.id.reset) {
             resetAlertDialog();
             return true;
         } else {

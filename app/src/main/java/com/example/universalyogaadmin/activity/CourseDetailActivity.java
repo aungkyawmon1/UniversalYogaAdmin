@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,12 +25,14 @@ import com.example.universalyogaadmin.adapter.ClassAdapter;
 import com.example.universalyogaadmin.database.DatabaseHelper;
 import com.example.universalyogaadmin.model.YogaClass;
 import com.example.universalyogaadmin.model.YogaCourse;
+import com.example.universalyogaadmin.network.NetworkUtil;
 
 import java.util.ArrayList;
 
 public class CourseDetailActivity extends AppCompatActivity implements ClassUpdateListener {
 
     private TextView tvName, tvCapacity, tvPrice, tvDuration, tvDescription, tvYogaType, tvYogaLevel;
+    private Button buttonPublish;
     ImageView ivAddClass;
     RecyclerView rvClass;
     private DatabaseHelper databaseHelper;
@@ -37,6 +40,7 @@ public class CourseDetailActivity extends AppCompatActivity implements ClassUpda
 
     ArrayList<YogaClass> yogaClasses;
 
+    private boolean isPublished = false;
     private  int courseID = -1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +60,7 @@ public class CourseDetailActivity extends AppCompatActivity implements ClassUpda
         tvDescription = findViewById(R.id.tvDescription);
         ivAddClass = findViewById(R.id.ivAddClass);
         rvClass = findViewById(R.id.rvClass);
+        buttonPublish = findViewById(R.id.buttonPublish);
         databaseHelper = new DatabaseHelper(this);
 
         setUpRecyclerView();
@@ -63,6 +68,8 @@ public class CourseDetailActivity extends AppCompatActivity implements ClassUpda
 
         courseID = getIntent().getIntExtra("yoga_course_id", -1);
 
+        // Set click listener for the submit button
+        buttonPublish.setOnClickListener(view -> validateAndSubmit());
 
     }
 
@@ -73,8 +80,22 @@ public class CourseDetailActivity extends AppCompatActivity implements ClassUpda
         updateClassData();
     }
 
+    private void checkNetworkAndUpdatePublishButton() {
+        boolean state = NetworkUtil.isNetworkAvailable(this) && !(isPublished);
+        buttonPublish.setVisibility( state ? View.VISIBLE : View.GONE);
+    }
+
+    private void validateAndSubmit() {
+        if (databaseHelper.updateCourseIsPublishedToTrue(courseID)) {
+            loadClassDetails(courseID);
+        }
+
+    }
+
     private void loadClassDetails(int id) {
         YogaCourse yogaCourse = databaseHelper.getYogaCourse(id);
+        isPublished = yogaCourse.getIsPublished();
+        checkNetworkAndUpdatePublishButton();
 
         tvName.setText(yogaCourse.getDay()+" - " + yogaCourse.getTime());
         tvCapacity.setText(yogaCourse.getCapacity() + "");

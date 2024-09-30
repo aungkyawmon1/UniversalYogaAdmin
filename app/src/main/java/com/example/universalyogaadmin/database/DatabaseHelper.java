@@ -16,7 +16,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // Database Name and Version
     private static final String DATABASE_NAME = "Yoga.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     // Table Name
     private static final String TABLE_COURSE = "course";
@@ -32,6 +32,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COURSE_COLUMN_TYPE = "type";
     private static final String COURSE_COLUMN_LEVEL = "level";
     private static final String COURSE_COLUMN_DESCRIPTION = "description";
+    private static final String COURSE_COLUMN_IS_PUBLISHED = "is_published";
     private static final String CLASS_COLUMN_ID = "id";
     private static final String CLASS_COLUMN_COURSE_ID = "course_id";
     private static final String CLASS_COLUMN_DATE = "date_class";
@@ -49,6 +50,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     COURSE_COLUMN_PRICE + " REAL NOT NULL, " +
                     COURSE_COLUMN_TYPE + " TEXT NOT NULL, " +
                     COURSE_COLUMN_LEVEL + " TEXT NOT NULL, " +
+                    COURSE_COLUMN_IS_PUBLISHED + " INTEGER NOT NULL,"+
                     COURSE_COLUMN_DESCRIPTION + " TEXT)";
 
     private static final String CREATE_TABLE_CLASS =
@@ -57,6 +59,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     + CLASS_COLUMN_COURSE_ID + " INTEGER NOT NULL,"
                     + CLASS_COLUMN_DATE + " TEXT NOT NULL,"
                     + CLASS_COLUMN_TEACHER + " TEXT NOT NULL,"
+                    + COURSE_COLUMN_DAY + " TEXT NOT NULL,"
                     + CLASS_COLUMN_COMMENT + " TEXT"
                     + ")";
 
@@ -74,13 +77,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop the old table if it exists
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_COURSE);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CLASS);
+        db.execSQL("DROP TABLE IF EXISTS '" + TABLE_COURSE + "'");
+        db.execSQL("DROP TABLE IF EXISTS '" + TABLE_CLASS + "'");
         onCreate(db);
     }
 
     // Method to add a new class
-    public boolean addCourse(String day, String time, int capacity, int duration, double price, String type, String level, String description) {
+    public boolean addCourse(String day, String time, int capacity, int duration, double price, String type, String level, String description, boolean isPublished) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COURSE_COLUMN_DAY, day);
@@ -91,19 +94,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COURSE_COLUMN_TYPE, type);
         values.put(COURSE_COLUMN_LEVEL, level);
         values.put(COURSE_COLUMN_DESCRIPTION, description);
+        values.put(COURSE_COLUMN_IS_PUBLISHED, isPublished ? 1 : 0 );
 
         long result = db.insert(TABLE_COURSE, null, values);
         db.close();
         return result != -1;
     }
 
-    public boolean addClass(int courseID, String date, String teacher, String comment) {
+    public boolean addClass(int courseID, String date, String teacher, String comment, String day) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(CLASS_COLUMN_COURSE_ID, courseID);
         values.put(CLASS_COLUMN_DATE, date);
         values.put(CLASS_COLUMN_TEACHER, teacher);
         values.put(CLASS_COLUMN_COMMENT, comment);
+        values.put(COURSE_COLUMN_DAY, day);
 
         long result = db.insert(TABLE_CLASS, null, values);
         db.close();
@@ -118,17 +123,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                int id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
-                String day = cursor.getString(cursor.getColumnIndexOrThrow("day"));
-                String time = cursor.getString(cursor.getColumnIndexOrThrow("time"));
-                int capacity = cursor.getInt(cursor.getColumnIndexOrThrow("capacity"));
-                int duration = cursor.getInt(cursor.getColumnIndexOrThrow("duration"));
-                double price = cursor.getDouble(cursor.getColumnIndexOrThrow("price"));
-                String type = cursor.getString(cursor.getColumnIndexOrThrow("type"));
-                String level = cursor.getString(cursor.getColumnIndexOrThrow("level"));
-                String description = cursor.getString(cursor.getColumnIndexOrThrow("description"));
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow(COURSE_COLUMN_ID));
+                String day = cursor.getString(cursor.getColumnIndexOrThrow(COURSE_COLUMN_DAY));
+                String time = cursor.getString(cursor.getColumnIndexOrThrow(COURSE_COLUMN_TIME));
+                int capacity = cursor.getInt(cursor.getColumnIndexOrThrow(COURSE_COLUMN_CAPACITY));
+                int duration = cursor.getInt(cursor.getColumnIndexOrThrow(COURSE_COLUMN_DURATION));
+                double price = cursor.getDouble(cursor.getColumnIndexOrThrow(COURSE_COLUMN_PRICE));
+                String type = cursor.getString(cursor.getColumnIndexOrThrow(COURSE_COLUMN_TYPE));
+                String level = cursor.getString(cursor.getColumnIndexOrThrow(COURSE_COLUMN_LEVEL));
+                String description = cursor.getString(cursor.getColumnIndexOrThrow(COURSE_COLUMN_DESCRIPTION));
+                int isPublishedValue = cursor.getInt(cursor.getColumnIndexOrThrow(COURSE_COLUMN_IS_PUBLISHED));
 
-                YogaCourse yogaCourse = new YogaCourse(id, day, time, capacity, duration, price, type, level, description);
+                boolean isPublished = isPublishedValue == 1 ? true : false;
+                YogaCourse yogaCourse = new YogaCourse(id, day, time, capacity, duration, price, type, level, description, isPublished );
                 yogaCourses.add(yogaCourse);
             }
             cursor.close();
@@ -149,8 +156,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 String date = cursor.getString(cursor.getColumnIndexOrThrow(CLASS_COLUMN_DATE));
                 String teacher = cursor.getString(cursor.getColumnIndexOrThrow(CLASS_COLUMN_TEACHER));
                 String comment = cursor.getString(cursor.getColumnIndexOrThrow(CLASS_COLUMN_COMMENT));
+                String day = cursor.getString(cursor.getColumnIndexOrThrow(COURSE_COLUMN_DAY));
 
-                YogaClass yogaClass = new YogaClass(id, courseID, date, teacher, comment);
+                YogaClass yogaClass = new YogaClass(id, courseID, date, teacher, comment, day);
                 yogaClasses.add(yogaClass);
             }
             cursor.close();
@@ -170,6 +178,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(COURSE_COLUMN_TYPE, yogaCourse.getType());
         contentValues.put(COURSE_COLUMN_LEVEL, yogaCourse.getLevel());
         contentValues.put(COURSE_COLUMN_DESCRIPTION, yogaCourse.getDescription());
+        contentValues.put(COURSE_COLUMN_IS_PUBLISHED, 0 );
 
         int rowsAffected = db.update( TABLE_COURSE , contentValues, COURSE_COLUMN_ID + " = ?", new String[]{String.valueOf(id)});
 
@@ -191,13 +200,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return rowsAffected > 0;
     }
 
+    public  boolean updateCourseIsPublishedToTrue(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COURSE_COLUMN_IS_PUBLISHED, 1 );
+
+        int rowsAffected = db.update( TABLE_COURSE , contentValues, COURSE_COLUMN_ID + " = ?", new String[]{String.valueOf(id)});
+        // Update was successful if rowsAffected is greater than 0
+        db.close();
+        return rowsAffected > 0;
+    }
+
     public YogaCourse getYogaCourse(int courseID) {
         SQLiteDatabase db = this.getReadableDatabase();
 
         String query = "SELECT * FROM " + TABLE_COURSE + " WHERE " + COURSE_COLUMN_ID + " = ?";
         Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(courseID)});
 
-        YogaCourse yogaCourse = new YogaCourse(0, "", "",0,0,0, "", "", "");
+        YogaCourse yogaCourse = new YogaCourse(0, "", "",0,0,0, "", "", "", true);
 
         if (cursor != null) {
             while (cursor.moveToFirst()) {
@@ -211,8 +231,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 String type = cursor.getString(cursor.getColumnIndexOrThrow("type"));
                 String level = cursor.getString(cursor.getColumnIndexOrThrow("level"));
                 String description = cursor.getString(cursor.getColumnIndexOrThrow("description"));
+                int isPublishedValue = cursor.getInt(cursor.getColumnIndexOrThrow(COURSE_COLUMN_IS_PUBLISHED));
 
-                yogaCourse = new YogaCourse(id, day, time, capacity, duration, price, type, level, description);
+                boolean isPublished = isPublishedValue == 1 ? true : false;
+
+                yogaCourse = new YogaCourse(id, day, time, capacity, duration, price, type, level, description, isPublished);
 
                 break;
             }
@@ -228,7 +251,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String query = "SELECT * FROM " + TABLE_CLASS + " WHERE " + CLASS_COLUMN_ID + " = ? ";
         Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(classID)});
 
-        YogaClass yogaClass = new YogaClass(-1, -1, "", "", "");
+        YogaClass yogaClass = new YogaClass(-1, -1, "", "", "", "");
         if (cursor != null) {
             while (cursor.moveToFirst()) {
                 int id = cursor.getInt(cursor.getColumnIndexOrThrow(CLASS_COLUMN_ID));
@@ -236,8 +259,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 String date = cursor.getString(cursor.getColumnIndexOrThrow(CLASS_COLUMN_DATE));
                 String teacher = cursor.getString(cursor.getColumnIndexOrThrow(CLASS_COLUMN_TEACHER));
                 String comment = cursor.getString(cursor.getColumnIndexOrThrow(CLASS_COLUMN_COMMENT));
+                String day = cursor.getString(cursor.getColumnIndexOrThrow(COURSE_COLUMN_DAY));
 
-                yogaClass = new YogaClass(id, courseID, date, teacher, comment);
+                yogaClass = new YogaClass(id, courseID, date, teacher, comment, day);
                 break;
 
             }

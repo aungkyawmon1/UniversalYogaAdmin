@@ -10,9 +10,10 @@ public class YogaCourse {
     private String type;
     private String level;
     private String description;
+    private boolean isPublished;
 
     // Constructor
-    public YogaCourse(int id, String day, String time, int capacity, int duration, double price, String type, String level, String description) {
+    public YogaCourse(int id, String day, String time, int capacity, int duration, double price, String type, String level, String description, boolean isPublished) {
         this.id = id;
         this.day = day;
         this.time = time;
@@ -22,6 +23,7 @@ public class YogaCourse {
         this.type = type;
         this.level = level;
         this.description = description;
+        this.isPublished = isPublished;
     }
 
     // Getters and Setters
@@ -34,4 +36,5 @@ public class YogaCourse {
     public String getType() { return type; }
     public String getLevel() { return  level; }
     public String getDescription() { return description; }
+    public boolean getIsPublished() { return  isPublished; }
 }

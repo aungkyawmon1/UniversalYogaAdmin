@@ -110,7 +110,7 @@ public class EditClassActivity extends AppCompatActivity {
         // Save class details to the SQLite database
         // Implementation of database insertion goes here
         // Add the course to the database
-        YogaClass yogaClass = new YogaClass(classID, courseID, date, teacher, comment);
+        YogaClass yogaClass = new YogaClass(classID, courseID, date, teacher, comment, "");
         boolean isInserted = databaseHelper.updateClass(classID, yogaClass);
         if (isInserted) {
             Toast.makeText(this, "Class updated successfully!", Toast.LENGTH_SHORT).show();
