@@ -28,6 +28,7 @@
                 android:id="@+id/svSearch"
                 android:layout_weight="0.9"
                 android:layout_width="0dp"
+                android:hint="class name"
                 android:layout_height="50dp"/>
 
             <ImageView

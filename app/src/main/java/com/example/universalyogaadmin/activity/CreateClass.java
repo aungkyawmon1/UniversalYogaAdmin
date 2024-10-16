@@ -21,13 +21,15 @@ import com.example.universalyogaadmin.model.YogaCourse;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CreateClass extends AppCompatActivity {
 
     private TextInputEditText editTextDate, editTextTeacher, editTextComment;
 
     private int courseID = -1;
-    private String day = "";
+    private String dayOfWeekString = "Monday";
 
     private DatabaseHelper databaseHelper;
     @Override
@@ -52,7 +54,7 @@ public class CreateClass extends AppCompatActivity {
 
     private void loadClassDetails(int id) {
         YogaCourse yogaCourse = databaseHelper.getYogaCourse(id);
-        day = yogaCourse.getDay();
+        dayOfWeekString = yogaCourse.getDay();
     }
 
     private void setUpDatePicker() {
@@ -64,27 +66,76 @@ public class CreateClass extends AppCompatActivity {
         editTextDate.setOnClickListener(v -> showDatePickerDialog() );
     }
 
-
-
-        private void showDatePickerDialog() {
+    private void showDatePickerDialog() {
         // Get the current date to display in the picker as default
         final Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        // Create a new instance of DatePickerDialog and show it
+        // Convert day string to corresponding Calendar constant
+        int dayOfWeek = getDayOfWeekFromString(dayOfWeekString);
+        if (dayOfWeek == -1) {
+            Toast.makeText(this, "Invalid day of week", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Create a new instance of DatePickerDialog
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 this,
                 (view, selectedYear, selectedMonth, selectedDay) -> {
-                    // Format the selected date and set it in the EditText
-                    String selectedDate = selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear;
-                    editTextDate.setText(selectedDate);
+                    Calendar selectedCalendar = Calendar.getInstance();
+                    selectedCalendar.set(selectedYear, selectedMonth, selectedDay);
+                    int selectedDayOfWeek = selectedCalendar.get(Calendar.DAY_OF_WEEK);
+
+                    // Check if the selected day matches the specified day (e.g., Monday)
+                    if (selectedDayOfWeek == dayOfWeek) {
+                        // Format the selected date and set it in the EditText
+                        String selectedDate = selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear;
+                        editTextDate.setText(selectedDate);
+                    } else {
+                        Toast.makeText(this, "Please select a " + dayOfWeekString, Toast.LENGTH_SHORT).show();
+                    }
                 },
                 year, month, day);
 
+        // Add a listener to filter the dates based on the day of the week
+        datePickerDialog.getDatePicker().init(year, month, day, (view, year1, monthOfYear, dayOfMonth) -> {
+            Calendar selectedCalendar = Calendar.getInstance();
+            selectedCalendar.set(year1, monthOfYear, dayOfMonth);
+            int selectedDayOfWeek = selectedCalendar.get(Calendar.DAY_OF_WEEK);
+
+            // If the selected day is not the desired day, automatically move to the next matching day
+            if (selectedDayOfWeek != dayOfWeek) {
+                while (selectedDayOfWeek != dayOfWeek) {
+                    selectedCalendar.add(Calendar.DAY_OF_MONTH, 1);
+                    selectedDayOfWeek = selectedCalendar.get(Calendar.DAY_OF_WEEK);
+                }
+
+                view.updateDate(
+                        selectedCalendar.get(Calendar.YEAR),
+                        selectedCalendar.get(Calendar.MONTH),
+                        selectedCalendar.get(Calendar.DAY_OF_MONTH)
+                );
+            }
+        });
+
         // Show the DatePickerDialog
         datePickerDialog.show();
+    }
+
+    // Helper function to map day string to Calendar constant
+    private int getDayOfWeekFromString(String day) {
+        Map<String, Integer> dayMap = new HashMap<>();
+        dayMap.put("Sunday", Calendar.SUNDAY);
+        dayMap.put("Monday", Calendar.MONDAY);
+        dayMap.put("Tuesday", Calendar.TUESDAY);
+        dayMap.put("Wednesday", Calendar.WEDNESDAY);
+        dayMap.put("Thursday", Calendar.THURSDAY);
+        dayMap.put("Friday", Calendar.FRIDAY);
+        dayMap.put("Saturday", Calendar.SATURDAY);
+
+        return dayMap.getOrDefault(day, -1); // Return -1 if the day is invalid
     }
 
     private void validateAndSubmit() {
@@ -107,7 +158,7 @@ public class CreateClass extends AppCompatActivity {
         // Save class details to the SQLite database
         // Implementation of database insertion goes here
         // Add the course to the database
-        boolean isInserted = databaseHelper.addClass(courseID, date, teacher, comment, day);
+        boolean isInserted = databaseHelper.addClass(courseID, date, teacher, comment, dayOfWeekString);
         if (isInserted) {
             Toast.makeText(this, "Class added successfully!", Toast.LENGTH_SHORT).show();
             finish();  // Close activity and go back to the list

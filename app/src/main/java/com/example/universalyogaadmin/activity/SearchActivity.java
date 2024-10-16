@@ -19,15 +19,18 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.universalyogaadmin.ClassUpdateListener;
+import com.example.universalyogaadmin.FilterListener;
 import com.example.universalyogaadmin.R;
 import com.example.universalyogaadmin.adapter.ClassAdapter;
+import com.example.universalyogaadmin.adapter.SearchClassAdapter;
+import com.example.universalyogaadmin.bottomsheet.FilterBottomSheet;
 import com.example.universalyogaadmin.database.DatabaseHelper;
 import com.example.universalyogaadmin.model.YogaClass;
 import com.example.universalyogaadmin.model.YogaCourse;
 
 import java.util.ArrayList;
 
-public class SearchActivity extends AppCompatActivity implements ClassUpdateListener {
+public class SearchActivity extends AppCompatActivity implements FilterListener {
 
     ImageView ivFilter;
 
@@ -41,9 +44,9 @@ public class SearchActivity extends AppCompatActivity implements ClassUpdateList
 
     ArrayList<YogaClass> yogaClasses;
 
-    String location = "", length = "", date = "", nameOfPlan = "";
+    String dayOfWeek = "", date = "", teacherName = "";
 
-    ClassAdapter classAdapter;
+    SearchClassAdapter classAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,8 +99,8 @@ public class SearchActivity extends AppCompatActivity implements ClassUpdateList
                 if(newText.isEmpty()) {
                     classAdapter.updateView(yogaClasses);
                 } else {
-                    nameOfPlan = newText;
-                    searchPlanner();
+                    teacherName = newText;
+                    searchClass();
                 }
                 return true;
             }
@@ -113,13 +116,13 @@ public class SearchActivity extends AppCompatActivity implements ClassUpdateList
 
     }
 
-    private void searchPlanner() {
-       // classAdapter.updateView(dbHelper.searchPlanner(nameOfPlan, location, length, date));
+    private void searchClass() {
+        classAdapter.updateView(dbHelper.searchClass(teacherName, date, dayOfWeek));
     }
 
     private void setUpRecyclerView() {
         yogaClasses = new ArrayList<>();
-        classAdapter = new ClassAdapter(this,this, yogaClasses);
+        classAdapter = new SearchClassAdapter(this, yogaClasses);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager( this, 1);
         rvPlanner.setLayoutManager(layoutManager);
         rvPlanner.setItemAnimator(new DefaultItemAnimator());
@@ -127,32 +130,10 @@ public class SearchActivity extends AppCompatActivity implements ClassUpdateList
     }
 
     private void showFilterBottomSheet() {
-//        FilterBottomSheet bottomSheet = new FilterBottomSheet(this);
-//        bottomSheet.show(getSupportFragmentManager(),
-//                "ModalBottomSheet");
+        FilterBottomSheet bottomSheet = new FilterBottomSheet(this);
+        bottomSheet.show(getSupportFragmentManager(),
+                "ModalBottomSheet");
     }
-
-//    @Override
-//    public void search(String location, String length, String date) {
-//
-//        this.location = location;
-//        this.length = length;
-//        this.date = date;
-//        String filteredBy = "Filtered By: ";
-//        if (!location.isEmpty()) {
-//            filteredBy += "Location, ";
-//        }
-//
-//        if (!length.isEmpty()) {
-//            filteredBy += "Length, ";
-//        }
-//
-//        if(!date.isEmpty()) {
-//            filteredBy += "Date";
-//        }
-//        tvFilterBy.setText(filteredBy);
-//        searchPlanner();
-//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -167,12 +148,21 @@ public class SearchActivity extends AppCompatActivity implements ClassUpdateList
     }
 
     @Override
-    public void deleteClass(int classID) {
+    public void search(String date, String dayOfWeek) {
+        this.dayOfWeek = dayOfWeek;
+        this.date = date;
+        String filteredBy = "Filtered By:";
 
+        if(!date.isEmpty()) {
+            filteredBy += " Date";
+        }
+
+        if (!dayOfWeek.isEmpty()) {
+            filteredBy += " Day";
+        }
+
+        tvFilterBy.setText(filteredBy);
+        searchClass();
     }
 
-    @Override
-    public void updateClass(int classID) {
-
-    }
 }

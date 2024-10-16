@@ -286,6 +286,39 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result > 0;
     }
 
+    public ArrayList<YogaClass> searchClass(String teacherName, String date, String dayOfWeek) {
+        ArrayList<YogaClass> yogaClasses = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String query = "SELECT * FROM " + TABLE_CLASS + " WHERE " +
+                CLASS_COLUMN_TEACHER + " LIKE ? COLLATE NOCASE AND " +
+                CLASS_COLUMN_DATE + " LIKE ? COLLATE NOCASE AND " +
+                COURSE_COLUMN_DAY + " LIKE ? COLLATE NOCASE";
+
+        String[] args = new String[]{"%" + teacherName + "%", "%" + date + "%", "%" + dayOfWeek + "%"};
+        Cursor cursor = db.rawQuery(query, args);
+
+        while (cursor.moveToNext()) {
+            // Retrieve data from the cursor
+            int id = cursor.getInt(cursor.getColumnIndexOrThrow(CLASS_COLUMN_ID));
+            int courseID = cursor.getInt(cursor.getColumnIndexOrThrow(CLASS_COLUMN_COURSE_ID));
+            String dateAt = cursor.getString(cursor.getColumnIndexOrThrow(CLASS_COLUMN_DATE));
+            String teacher = cursor.getString(cursor.getColumnIndexOrThrow(CLASS_COLUMN_TEACHER));
+            String comment = cursor.getString(cursor.getColumnIndexOrThrow(CLASS_COLUMN_COMMENT));
+            String day = cursor.getString(cursor.getColumnIndexOrThrow(COURSE_COLUMN_DAY));
+
+            YogaClass yogaClass = new YogaClass(id, courseID, dateAt, teacher, comment, day);
+            yogaClasses.add(yogaClass);
+        }
+
+        // Close the cursor and the database when you're done
+        cursor.close();
+        db.close();
+
+        return yogaClasses;
+
+    }
+
     // Method to reset the database by deleting all rows
     public void resetDatabase() {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -293,5 +326,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.delete(TABLE_CLASS, null, null);
         db.close();
     }
+
+
 
 }

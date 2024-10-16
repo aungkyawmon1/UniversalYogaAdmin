@@ -25,4 +25,6 @@
 
     <!-- Search -->
     <string name="filtered_by">Filtered_by</string>
+    <string name="date">Date</string>
+    <string name="day_of_week">Day Of Week</string>
 </resources>
