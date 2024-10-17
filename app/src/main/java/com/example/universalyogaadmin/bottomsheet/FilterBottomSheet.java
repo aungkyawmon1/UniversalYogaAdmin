@@ -9,6 +9,7 @@ import android.view.WindowManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -31,7 +32,9 @@ public class FilterBottomSheet extends BottomSheetDialogFragment {
 
     TextView tvChoose;
 
-    TextInputEditText etDayOfWeek, etDate;
+    TextInputEditText etDate;
+
+    private Spinner spinnerDayOfWeek;
 
     public FilterBottomSheet(FilterListener listener) {
         this.listener = listener;
@@ -56,7 +59,7 @@ public class FilterBottomSheet extends BottomSheetDialogFragment {
         ivBack = v.findViewById(R.id.ivBack);
         tvChoose = v.findViewById(R.id.tvChoose);
 
-        etDayOfWeek = v.findViewById(R.id.etDayOfWeek);
+        spinnerDayOfWeek = v.findViewById(R.id.spinnerDayOfWeek);
         etDate = v.findViewById(R.id.etDate);
     }
 
@@ -66,7 +69,7 @@ public class FilterBottomSheet extends BottomSheetDialogFragment {
         });
 
         tvChoose.setOnClickListener(view -> {
-            String dayOfWeek = etDayOfWeek.getText().toString();
+            String dayOfWeek = spinnerDayOfWeek.getSelectedItem().toString();
             String date = etDate.getText().toString();
             listener.search(date, dayOfWeek);
             dismiss();
@@ -99,7 +102,7 @@ public class FilterBottomSheet extends BottomSheetDialogFragment {
                     @Override
                     public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDayOfMonth) {
                         // Handle the selected date
-                        String selectedDate = selectedYear + "-" + (selectedMonth + 1) + "-" + selectedDayOfMonth;
+                        String selectedDate = selectedDayOfMonth + "/" + (selectedMonth + 1) + "/" + selectedYear;
                         etDate.setText(selectedDate);
                     }
                 },

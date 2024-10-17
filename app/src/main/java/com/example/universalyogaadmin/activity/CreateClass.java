@@ -119,7 +119,7 @@ public class CreateClass extends AppCompatActivity {
                 );
             }
         });
-
+        datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
         // Show the DatePickerDialog
         datePickerDialog.show();
     }

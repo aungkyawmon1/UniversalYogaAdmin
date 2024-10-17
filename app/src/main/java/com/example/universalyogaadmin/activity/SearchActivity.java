@@ -154,11 +154,11 @@ public class SearchActivity extends AppCompatActivity implements FilterListener 
         String filteredBy = "Filtered By:";
 
         if(!date.isEmpty()) {
-            filteredBy += " Date";
+            filteredBy += " Date: " + date;
         }
 
         if (!dayOfWeek.isEmpty()) {
-            filteredBy += " Day";
+            filteredBy += " " + dayOfWeek;
         }
 
         tvFilterBy.setText(filteredBy);

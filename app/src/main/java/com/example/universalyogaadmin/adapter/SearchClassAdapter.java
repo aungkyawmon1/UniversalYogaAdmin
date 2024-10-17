@@ -1,6 +1,7 @@
 package com.example.universalyogaadmin.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.universalyogaadmin.ClassUpdateListener;
 import com.example.universalyogaadmin.R;
+import com.example.universalyogaadmin.activity.CourseDetailActivity;
 import com.example.universalyogaadmin.model.YogaClass;
 
 import java.util.ArrayList;
@@ -45,6 +47,12 @@ public class SearchClassAdapter extends RecyclerView.Adapter<SearchClassAdapter.
         holder.tvTeacher.setText("Teacher: " + yogaClass.getTeacher());
         holder.tvComment.setText(yogaClass.getComment());
 
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, CourseDetailActivity.class);
+            intent.putExtra("yoga_course_id", yogaClass.getCourseID());
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        });
     }
 
     @Override
