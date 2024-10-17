@@ -1,5 +1,4 @@
 package com.example.universalyogaadmin.network;
-
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.Network;
@@ -32,13 +31,15 @@ public class NetworkLiveData extends LiveData<Boolean> {
     protected void onActive() {
         super.onActive();
 
+        // Build the network request for internet capability
         NetworkRequest networkRequest = new NetworkRequest.Builder()
                 .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
                 .build();
 
+        // Register the network callback
         connectivityManager.registerNetworkCallback(networkRequest, networkCallback);
 
-        // Set initial value
+        // Set initial value based on current network state
         postValue(isNetworkAvailable());
     }
 
@@ -48,10 +49,11 @@ public class NetworkLiveData extends LiveData<Boolean> {
         connectivityManager.unregisterNetworkCallback(networkCallback);
     }
 
+    // Helper method to check if network is available
     private boolean isNetworkAvailable() {
-        Network network = connectivityManager.getActiveNetwork();
-        if (network != null) {
-            NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(network);
+        Network activeNetwork = connectivityManager.getActiveNetwork();
+        if (activeNetwork != null) {
+            NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(activeNetwork);
             return capabilities != null && capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET);
         }
         return false;
