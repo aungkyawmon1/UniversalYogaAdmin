@@ -25,7 +25,7 @@ import com.example.universalyogaadmin.adapter.ClassAdapter;
 import com.example.universalyogaadmin.database.DatabaseHelper;
 import com.example.universalyogaadmin.model.YogaClass;
 import com.example.universalyogaadmin.model.YogaCourse;
-import com.example.universalyogaadmin.network.NetworkUtil;
+import com.example.universalyogaadmin.network.NetworkLiveData;
 
 import java.util.ArrayList;
 
@@ -42,6 +42,7 @@ public class CourseDetailActivity extends AppCompatActivity implements ClassUpda
 
     private boolean isPublished = false;
     private  int courseID = -1;
+    private NetworkLiveData networkLiveData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +67,17 @@ public class CourseDetailActivity extends AppCompatActivity implements ClassUpda
         setUpRecyclerView();
         setOnClickListener();
 
+        networkLiveData = new NetworkLiveData(this);
+        networkLiveData.observe(this, isConnected -> {
+            if (isConnected) {
+                // Network is connected, update UI accordingly
+                buttonPublish.setVisibility( View.VISIBLE);
+            } else {
+                // No internet connection, show a warning
+                buttonPublish.setVisibility( View.GONE);
+            }
+        });
+
         courseID = getIntent().getIntExtra("yoga_course_id", -1);
 
         // Set click listener for the submit button
@@ -80,11 +92,6 @@ public class CourseDetailActivity extends AppCompatActivity implements ClassUpda
         updateClassData();
     }
 
-    private void checkNetworkAndUpdatePublishButton() {
-        boolean state = NetworkUtil.isNetworkAvailable(this) && !(isPublished);
-        buttonPublish.setVisibility( state ? View.VISIBLE : View.GONE);
-    }
-
     private void validateAndSubmit() {
         if (databaseHelper.updateCourseIsPublishedToTrue(courseID)) {
             loadClassDetails(courseID);
@@ -95,7 +102,6 @@ public class CourseDetailActivity extends AppCompatActivity implements ClassUpda
     private void loadClassDetails(int id) {
         YogaCourse yogaCourse = databaseHelper.getYogaCourse(id);
         isPublished = yogaCourse.getIsPublished();
-        checkNetworkAndUpdatePublishButton();
 
         tvName.setText(yogaCourse.getDay()+" - " + yogaCourse.getTime());
         tvCapacity.setText(yogaCourse.getCapacity() + "");

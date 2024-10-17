@@ -2,8 +2,8 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="primary">#46C803</color>
-    <color name="colorAccent">#7FC35C</color>
+    <color name="primary">#253245</color>
+    <color name="colorAccent">#06AEEF</color>
     <color name="planer_detail">#BFDFAE</color>
 
     <color name="course_detail_card">#D6D2D2</color>
