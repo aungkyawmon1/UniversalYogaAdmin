@@ -1,5 +1,7 @@
 package com.example.universalyogaadmin.model;
 
+import com.example.universalyogaadmin.model.api.YogaClassVO;
+
 public class YogaClass {
     private int id; // Add ID if needed for database operations
     private int courseID;
@@ -24,4 +26,8 @@ public class YogaClass {
     public String getTeacher() { return teacher; }
     public String getComment() { return comment; }
     public String getDay() { return  day; }
+
+    public YogaClassVO changeYogaClassVO() {
+        return new YogaClassVO(id, courseID, date, teacher, comment, day);
+    }
 }

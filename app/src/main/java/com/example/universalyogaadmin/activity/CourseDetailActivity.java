@@ -26,9 +26,18 @@ import com.example.universalyogaadmin.adapter.ClassAdapter;
 import com.example.universalyogaadmin.database.DatabaseHelper;
 import com.example.universalyogaadmin.model.YogaClass;
 import com.example.universalyogaadmin.model.YogaCourse;
+import com.example.universalyogaadmin.model.api.YogaClassVO;
+import com.example.universalyogaadmin.model.api.YogaCourseVO;
 import com.example.universalyogaadmin.network.NetworkLiveData;
+import com.example.universalyogaadmin.network.RetrofitClient;
+import com.example.universalyogaadmin.network.YogaApi;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class CourseDetailActivity extends AppCompatActivity implements ClassUpdateListener {
 
@@ -41,6 +50,7 @@ public class CourseDetailActivity extends AppCompatActivity implements ClassUpda
 
     ArrayList<YogaClass> yogaClasses;
 
+    private boolean isInternetAvailable = false;
     private boolean isPublished = false;
     private  int courseID = -1;
     private NetworkLiveData networkLiveData;
@@ -70,13 +80,7 @@ public class CourseDetailActivity extends AppCompatActivity implements ClassUpda
 
         networkLiveData = new NetworkLiveData(this);
         networkLiveData.observe(this, isConnected -> {
-            if (isConnected) {
-                // Network is connected, update UI accordingly
-                buttonPublish.setVisibility( View.VISIBLE);
-            } else {
-                // No internet connection, show a warning
-                buttonPublish.setVisibility( View.GONE);
-            }
+            isInternetAvailable = isConnected;
         });
 
         courseID = getIntent().getIntExtra("yoga_course_id", -1);
@@ -94,9 +98,40 @@ public class CourseDetailActivity extends AppCompatActivity implements ClassUpda
     }
 
     private void validateAndSubmit() {
-        if (databaseHelper.updateCourseIsPublishedToTrue(courseID)) {
-            loadClassDetails(courseID);
+        if (isInternetAvailable) {
+            if (databaseHelper.updateCourseIsPublishedToTrue(courseID)) {
+                YogaApi yogaApi = RetrofitClient.getClient().create(YogaApi.class);
+                List<YogaClassVO> yogaClassesVO = new ArrayList<>();
+                for (YogaClass yogaClass : yogaClasses) {
+                    yogaClassesVO.add(yogaClass.changeYogaClassVO());
+                }
+                YogaCourseVO yogaCourseVO = databaseHelper.getYogaCourse(courseID).changYogaCourseVO(yogaClassesVO);
+                // Send request
+                Call<Void> call = yogaApi.sendYogaCourse(yogaCourseVO);
+                call.enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if (response.isSuccessful()) {
+                            Toast.makeText(CourseDetailActivity.this, "Yoga course is successfully published!", Toast.LENGTH_SHORT).show();
+                            loadClassDetails(courseID);
+                        } else {
+                            Toast.makeText(CourseDetailActivity.this, "Failed to send yoga course!", Toast.LENGTH_SHORT).show();
+                            databaseHelper.updateCourseIsPublishedToTrue(courseID);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Toast.makeText(CourseDetailActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+
+        } else {
+            Toast.makeText(this, "Please check your internet connection " , Toast.LENGTH_SHORT).show();
         }
+
 
     }
 

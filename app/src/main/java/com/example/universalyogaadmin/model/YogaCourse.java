@@ -1,5 +1,10 @@
 package com.example.universalyogaadmin.model;
 
+import com.example.universalyogaadmin.model.api.YogaClassVO;
+import com.example.universalyogaadmin.model.api.YogaCourseVO;
+
+import java.util.List;
+
 public class YogaCourse {
     private int id; // Add ID if needed for database operations
     private String day;
@@ -37,4 +42,8 @@ public class YogaCourse {
     public String getLevel() { return  level; }
     public String getDescription() { return description; }
     public boolean getIsPublished() { return  isPublished; }
+
+    public YogaCourseVO changYogaCourseVO(List<YogaClassVO> yogaClasses) {
+        return new YogaCourseVO(id, day, time, capacity, duration, price, type, level, description, isPublished, yogaClasses);
+    }
 }
