@@ -6,10 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-
 import com.example.universalyogaadmin.model.YogaClass;
 import com.example.universalyogaadmin.model.YogaCourse;
-
 import java.util.ArrayList;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
@@ -200,10 +198,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return rowsAffected > 0;
     }
 
-    public  boolean updateCourseIsPublishedToTrue(int id) {
+    public  boolean updateCourseIsPublished(int id, boolean isPublished ) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(COURSE_COLUMN_IS_PUBLISHED, 1 );
+        contentValues.put(COURSE_COLUMN_IS_PUBLISHED, isPublished ? 1 : 0 );
 
         int rowsAffected = db.update( TABLE_COURSE , contentValues, COURSE_COLUMN_ID + " = ?", new String[]{String.valueOf(id)});
         // Update was successful if rowsAffected is greater than 0

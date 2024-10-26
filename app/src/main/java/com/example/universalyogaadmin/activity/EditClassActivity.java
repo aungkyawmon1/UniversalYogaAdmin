@@ -167,6 +167,7 @@ public class EditClassActivity extends AppCompatActivity {
         YogaClass yogaClass = new YogaClass(classID, courseID, date, teacher, comment, "");
         boolean isInserted = databaseHelper.updateClass(classID, yogaClass);
         if (isInserted) {
+            databaseHelper.updateCourseIsPublished(courseID, false);
             Toast.makeText(this, "Class updated successfully!", Toast.LENGTH_SHORT).show();
             finish();  // Close activity and go back to the list
         } else {

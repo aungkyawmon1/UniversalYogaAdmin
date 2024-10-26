@@ -43,13 +43,11 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
         YogaCourse yogaCourse = yogaCourses.get(position);
 
         // Bind data to the view holder
-        holder.textViewDay.setText(yogaCourse.getDay());
-        holder.textViewTime.setText(yogaCourse.getTime());
-        holder.textViewCapacity.setText("Capacity: " + yogaCourse.getCapacity());
-        holder.textViewDuration.setText("Duration: " + yogaCourse.getDuration() + " mins");
-        holder.textViewPrice.setText("Price: £" + yogaCourse.getPrice());
+        holder.textViewDay.setText(yogaCourse.getDay() + " - " + yogaCourse.getTime());
+        holder.textViewCapacity.setText("" + yogaCourse.getCapacity());
+        holder.textViewDuration.setText( yogaCourse.getDuration() + " mins");
+        holder.textViewPrice.setText("" + yogaCourse.getPrice());
         holder.textViewType.setText(yogaCourse.getType());
-        holder.textViewDescription.setText(yogaCourse.getDescription() != null ? yogaCourse.getDescription() : "No description");
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, CourseDetailActivity.class);
@@ -66,17 +64,15 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
 
     // ViewHolder class to hold the view for each item
     static class CourseViewHolder extends RecyclerView.ViewHolder {
-        TextView textViewDay, textViewTime, textViewCapacity, textViewDuration, textViewPrice, textViewType, textViewDescription;
+        TextView textViewDay, textViewCapacity, textViewDuration, textViewPrice, textViewType;
 
         public CourseViewHolder(View itemView) {
             super(itemView);
             textViewDay = itemView.findViewById(R.id.textViewDay);
-            textViewTime = itemView.findViewById(R.id.textViewTime);
             textViewCapacity = itemView.findViewById(R.id.textViewCapacity);
             textViewDuration = itemView.findViewById(R.id.textViewDuration);
             textViewPrice = itemView.findViewById(R.id.textViewPrice);
             textViewType = itemView.findViewById(R.id.textViewType);
-            textViewDescription = itemView.findViewById(R.id.textViewDescription);
         }
     }
 

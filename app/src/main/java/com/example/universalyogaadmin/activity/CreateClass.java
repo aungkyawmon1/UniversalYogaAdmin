@@ -160,6 +160,7 @@ public class CreateClass extends AppCompatActivity {
         // Add the course to the database
         boolean isInserted = databaseHelper.addClass(courseID, date, teacher, comment, dayOfWeekString);
         if (isInserted) {
+            databaseHelper.updateCourseIsPublished(courseID, false);
             Toast.makeText(this, "Class added successfully!", Toast.LENGTH_SHORT).show();
             finish();  // Close activity and go back to the list
         } else {

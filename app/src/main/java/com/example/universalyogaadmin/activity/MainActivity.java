@@ -26,7 +26,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private RecyclerView recyclerViewClasses;
+    private RecyclerView rvClasses;
     private CourseAdapter adapter;
     private DatabaseHelper databaseHelper;
     private FloatingActionButton fabAddCourse;
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Initialize components
-        recyclerViewClasses = findViewById(R.id.recyclerViewClasses);
+        rvClasses = findViewById(R.id.recyclerViewClasses);
         fabAddCourse = findViewById(R.id.fabAddCourse);
         databaseHelper = new DatabaseHelper(this);
 
@@ -60,9 +60,9 @@ public class MainActivity extends AppCompatActivity {
         yogaCourses = new ArrayList<>();
         adapter = new CourseAdapter(this, yogaCourses);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager( this, 1);
-        recyclerViewClasses.setLayoutManager(layoutManager);
-        recyclerViewClasses.setItemAnimator(new DefaultItemAnimator());
-        recyclerViewClasses.setAdapter(adapter);
+        rvClasses.setLayoutManager(layoutManager);
+        rvClasses.setItemAnimator(new DefaultItemAnimator());
+        rvClasses.setAdapter(adapter);
     }
 
 

@@ -26,11 +26,13 @@ import com.example.universalyogaadmin.adapter.ClassAdapter;
 import com.example.universalyogaadmin.database.DatabaseHelper;
 import com.example.universalyogaadmin.model.YogaClass;
 import com.example.universalyogaadmin.model.YogaCourse;
+import com.example.universalyogaadmin.model.api.ResponseBody;
 import com.example.universalyogaadmin.model.api.YogaClassVO;
 import com.example.universalyogaadmin.model.api.YogaCourseVO;
 import com.example.universalyogaadmin.network.NetworkLiveData;
 import com.example.universalyogaadmin.network.RetrofitClient;
 import com.example.universalyogaadmin.network.YogaApi;
+import com.facebook.stetho.Stetho;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +43,7 @@ import retrofit2.Response;
 
 public class CourseDetailActivity extends AppCompatActivity implements ClassUpdateListener {
 
-    private TextView tvName, tvCapacity, tvPrice, tvDuration, tvDescription, tvYogaType, tvYogaLevel;
+    private TextView tvName, tvCapacity, tvPrice, tvDuration, tvDescription, tvYogaType, tvYogaLevel, tvDescTitle;
     private Button buttonPublish;
     ImageView ivAddClass;
     RecyclerView rvClass;
@@ -57,6 +59,7 @@ public class CourseDetailActivity extends AppCompatActivity implements ClassUpda
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Stetho.initializeWithDefaults(this);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_course_detail);
 
@@ -70,6 +73,7 @@ public class CourseDetailActivity extends AppCompatActivity implements ClassUpda
         tvYogaType = findViewById(R.id.tvYogaType);
         tvYogaLevel = findViewById(R.id.tvYogaLevel);
         tvDescription = findViewById(R.id.tvDescription);
+        tvDescTitle = findViewById(R.id.descTitle);
         ivAddClass = findViewById(R.id.ivAddClass);
         rvClass = findViewById(R.id.rvClass);
         buttonPublish = findViewById(R.id.buttonPublish);
@@ -99,7 +103,7 @@ public class CourseDetailActivity extends AppCompatActivity implements ClassUpda
 
     private void validateAndSubmit() {
         if (isInternetAvailable) {
-            if (databaseHelper.updateCourseIsPublishedToTrue(courseID)) {
+            if (databaseHelper.updateCourseIsPublished(courseID, true)) {
                 YogaApi yogaApi = RetrofitClient.getClient().create(YogaApi.class);
                 List<YogaClassVO> yogaClassesVO = new ArrayList<>();
                 for (YogaClass yogaClass : yogaClasses) {
@@ -107,22 +111,22 @@ public class CourseDetailActivity extends AppCompatActivity implements ClassUpda
                 }
                 YogaCourseVO yogaCourseVO = databaseHelper.getYogaCourse(courseID).changYogaCourseVO(yogaClassesVO);
                 // Send request
-                Call<Void> call = yogaApi.sendYogaCourse(yogaCourseVO);
-                call.enqueue(new Callback<Void>() {
+                Call<ResponseBody> call = yogaApi.sendYogaCourse(yogaCourseVO);
+                call.enqueue(new Callback<ResponseBody>() {
                     @Override
-                    public void onResponse(Call<Void> call, Response<Void> response) {
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                         if (response.isSuccessful()) {
                             Toast.makeText(CourseDetailActivity.this, "Yoga course is successfully published!", Toast.LENGTH_SHORT).show();
                             loadClassDetails(courseID);
                         } else {
                             Toast.makeText(CourseDetailActivity.this, "Failed to send yoga course!", Toast.LENGTH_SHORT).show();
-                            databaseHelper.updateCourseIsPublishedToTrue(courseID);
+                            databaseHelper.updateCourseIsPublished(courseID, false);
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<Void> call, Throwable t) {
-                        Toast.makeText(CourseDetailActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    public void onFailure(Call<ResponseBody> call, Throwable throwable) {
+                        Toast.makeText(CourseDetailActivity.this, "Error: " + throwable.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -139,12 +143,15 @@ public class CourseDetailActivity extends AppCompatActivity implements ClassUpda
         YogaCourse yogaCourse = databaseHelper.getYogaCourse(id);
         isPublished = yogaCourse.getIsPublished();
 
+        buttonPublish.setVisibility(isPublished ? View.GONE : View.VISIBLE);
+
         tvName.setText(yogaCourse.getDay()+" - " + yogaCourse.getTime());
         tvCapacity.setText(yogaCourse.getCapacity() + "");
         tvDuration.setText(yogaCourse.getDuration() + "");
         tvPrice.setText(yogaCourse.getPrice()+"");
         tvYogaType.setText(yogaCourse.getType());
         tvYogaLevel.setText(yogaCourse.getLevel());
+        tvDescTitle.setVisibility(yogaCourse.getDescription().isEmpty() ? View.GONE : View.VISIBLE);
         tvDescription.setVisibility(yogaCourse.getDescription().isEmpty() ? View.GONE : View.VISIBLE);
         tvDescription.setText(yogaCourse.getDescription());
     }
@@ -231,7 +238,6 @@ public class CourseDetailActivity extends AppCompatActivity implements ClassUpda
 
     @Override
     public void deleteClass(int classID) {
-
        createAlertDialog(classID);
     }
 
