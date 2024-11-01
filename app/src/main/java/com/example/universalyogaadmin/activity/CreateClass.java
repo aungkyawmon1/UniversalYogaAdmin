@@ -138,17 +138,31 @@ public class CreateClass extends AppCompatActivity {
         return dayMap.getOrDefault(day, -1); // Return -1 if the day is invalid
     }
 
+
+    private boolean checkValidation() {
+        boolean isValid = true;
+        if(editTextDate.getText().toString().isEmpty()) {
+            editTextDate.setError("Required!");
+            isValid = false;
+        } else {
+            editTextDate.setError(null);
+        }
+
+        if(editTextTeacher.getText().toString().isEmpty()) {
+            editTextTeacher.setError("Required!");
+            isValid = false;
+        } else {
+            editTextTeacher.setError(null);
+        }
+
+        return  isValid;
+    }
+
     private void validateAndSubmit() {
         // Validate required fields
         String date = editTextDate.getText().toString();
         String teacher = editTextTeacher.getText().toString().trim();
         String comment = editTextComment.getText().toString().trim();
-
-        // Check for empty fields and show errors
-        if (date.isEmpty() || teacher.isEmpty()) {
-            Toast.makeText(this, "Please fill in all required fields", Toast.LENGTH_SHORT).show();
-            return;
-        }
 
         // Display entered details for confirmation
         saveToDatabase(date, teacher, comment);
@@ -181,7 +195,11 @@ public class CreateClass extends AppCompatActivity {
         Log.i("LOG", "search" + item.getItemId());
 
         if(item.getItemId() == R.id.save) {
-            validateAndSubmit();
+            if(checkValidation()) {
+                validateAndSubmit();
+            } else {
+                Toast.makeText(this, "Please fill in all required fields", Toast.LENGTH_SHORT).show();
+            }
             return true;
         } else if (item.getItemId() == android.R.id.home) {
             finish(); // or perform any custom action

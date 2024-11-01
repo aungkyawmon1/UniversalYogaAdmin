@@ -91,6 +91,38 @@ public class CreateCourse extends AppCompatActivity {
         timePickerDialog.show();
     }
 
+    private boolean checkValidation() {
+        boolean isValid = true;
+        if(editTextTime.getText().toString().isEmpty()) {
+            editTextTime.setError("Required!");
+            isValid = false;
+        } else {
+            editTextTime.setError(null);
+        }
+
+        if(editTextCapacity.getText().toString().isEmpty()) {
+            editTextCapacity.setError("Required!");
+            isValid = false;
+        }  else {
+            editTextCapacity.setError(null);
+        }
+
+        if(editTextDuration.getText().toString().isEmpty()) {
+            editTextDuration.setError("Required!");
+            isValid = false;
+        } else {
+            editTextDuration.setError(null);
+        }
+
+        if(editTextPrice.getText().toString().isEmpty()) {
+            editTextPrice.setError("Required!");
+            isValid = false;
+        } else {
+            editTextPrice.setError(null);
+        }
+
+        return  isValid;
+    }
 
     private void validateAndSubmit() {
         // Validate required fields
@@ -101,12 +133,6 @@ public class CreateCourse extends AppCompatActivity {
         String price = editTextPrice.getText().toString().trim();
         String classType = spinnerClassType.getSelectedItem().toString();
         String level = spinnerDifficultyLevel.getSelectedItem().toString();
-
-        // Check for empty fields and show errors
-        if (day.isEmpty() || time.isEmpty() || capacity.isEmpty() || duration.isEmpty() || price.isEmpty() || classType.isEmpty()) {
-            Toast.makeText(this, "Please fill in all required fields", Toast.LENGTH_SHORT).show();
-            return;
-        }
 
         // Display entered details for confirmation
         showConfirmationDialog(day, time, capacity, duration, price, classType,level, editTextDescription.getText().toString());
@@ -149,10 +175,12 @@ public class CreateCourse extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection.
-        Log.i("LOG", "search" + item.getItemId());
-
         if(item.getItemId() == R.id.save) {
-            validateAndSubmit();
+            if (checkValidation()) {
+                validateAndSubmit();
+            } else {
+                Toast.makeText(this, "Please fill in all required fields", Toast.LENGTH_SHORT).show();
+            }
             return true;
         } else if (item.getItemId() == android.R.id.home) {
             finish(); // or perform any custom action
